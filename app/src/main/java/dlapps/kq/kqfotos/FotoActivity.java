@@ -1,7 +1,9 @@
 package dlapps.kq.kqfotos;
 
+import android.opengl.GLSurfaceView;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,9 +36,9 @@ public class FotoActivity extends ARViewActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -52,7 +54,9 @@ public class FotoActivity extends ARViewActivity {
     @Override
     protected int getGUILayout() {
         /* ADD LAYOUT TO GUI ON TOP OF GLSurfaceView*/
-        return 0;
+
+        Log.i("getGuiLayout", "hello from foto");
+        return R.layout.activity_foto;
     }
 
     /**

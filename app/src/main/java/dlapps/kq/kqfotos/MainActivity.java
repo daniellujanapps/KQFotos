@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.metaio.sdk.ARViewActivity;
@@ -30,7 +31,8 @@ public class MainActivity extends ARViewActivity {
      */
     @Override
     protected int getGUILayout() {
-        return 0;
+        Log.i("getGuiLayout", "hello from main");
+        return R.layout.activity_main;
     }
 
     /**
@@ -84,11 +86,16 @@ public class MainActivity extends ARViewActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.frozenFotoBtn) {
+            Log.i("MainActivity", "click frozenFotoBtn");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void frozenFotoBtn_Click(View view){
+        Log.i("MainActivity", "frozen button clicked - main");
     }
 
     /******************* metaio *****************************/
@@ -129,8 +136,9 @@ public class MainActivity extends ARViewActivity {
             if (result)
             {
                 // Start AR Activity on success
-                Intent intent = new Intent(getApplicationContext(), FotoActivity.class);
-                startActivity(intent);
+                Log.i("MainActivity", "random shit");
+//                Intent intent = new Intent(getApplicationContext(), FotoActivity.class);
+//                startActivity(intent);
             }
             else
             {
