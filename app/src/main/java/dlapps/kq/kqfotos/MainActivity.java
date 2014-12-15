@@ -1,15 +1,69 @@
 package dlapps.kq.kqfotos;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.metaio.sdk.ARViewActivity;
+import com.metaio.sdk.MetaioDebug;
+import com.metaio.sdk.jni.IGeometry;
+import com.metaio.sdk.jni.IMetaioSDKCallback;
+import com.metaio.tools.io.AssetsManager;
+
+import java.io.IOException;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ARViewActivity {
+
+    /**
+     * Provide resource for GUI overlay if required.
+     * <p/>
+     * The resource is inflated into mGUIView which is added in onStart
+     *
+     * @return Resource ID of the GUI view
+     */
+    @Override
+    protected int getGUILayout() {
+        return 0;
+    }
+
+    /**
+     * Provide metaio SDK callback handler if desired.
+     *
+     * @return Return metaio SDK callback handler
+     * @see com.metaio.sdk.jni.IMetaioSDKCallback
+     */
+    @Override
+    protected IMetaioSDKCallback getMetaioSDKCallbackHandler() {
+        return null;
+    }
+
+    /**
+     * Load rendering contents to metaio SDK in this method, e.g. 3D models, environment map etc..
+     */
+    @Override
+    protected void loadContents() {
+
+    }
+
+    /**
+     * Called when a geometry is touched.
+     *
+     * @param geometry Geometry that is touched
+     */
+    @Override
+    protected void onGeometryTouched(IGeometry geometry) {
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
@@ -36,4 +90,59 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /******************* metaio *****************************/
+
+    /**
+     * This task extracts all the application assets to an external or internal location
+     * to make them accessible to Metaio SDK
+     */
+    private class AssetsExtracter extends AsyncTask<Integer, Integer, Boolean>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+        }
+
+        @Override
+        protected Boolean doInBackground(Integer... params)
+        {
+            try
+            {
+                // Extract all assets and overwrite existing files if debug build
+                AssetsManager.extractAllAssets(getApplicationContext(), BuildConfig.DEBUG);
+            }
+            catch (IOException e)
+            {
+                MetaioDebug.log(Log.ERROR, "Error extracting assets: " + e.getMessage());
+                MetaioDebug.printStackTrace(Log.ERROR, e);
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result)
+        {
+            if (result)
+            {
+                // Start AR Activity on success
+                Intent intent = new Intent(getApplicationContext(), FotoActivity.class);
+                startActivity(intent);
+            }
+            else
+            {
+                // Show a toast with an error message
+                Toast toast = Toast.makeText(getApplicationContext(), "Error extracting application assets!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            }
+
+            finish();
+        }
+
+    }
+
 }
